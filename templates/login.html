@@ -8,7 +8,7 @@
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 	<!-- link to local static files -->
-    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+	<link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<!-- Font awesome fonts for vector graphics icons and text -->
@@ -16,9 +16,17 @@
 </head>
 <body>
 	<div class="container">
-		<h2>Welcome to Flask!</h2>
+		<h2>Please login</h2>
 		<br>
-		<p>Click <a href="/logout">here</a> to log out.</p>
+		<form action="" method="post">
+			<input type="text" placeholder="Username" name="username" value="{{request.form.username }}">
+			<input type="password" placeholder="Password" name="password" value="{{request.form.password }}">
+			<input class="btn btn-default" type="submit" value="Login">
+		</form>
+		{% if error %}
+			<p class="error"><strong>Error:</strong> {{ error }}</p>
+		{% endif %}
+		
 		{% for message in get_flashed_messages() %}
 			{{ message }}
 		{% endfor %}
