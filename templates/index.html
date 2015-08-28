@@ -1,27 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Introduction to Flask on Heroku</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<!-- Optional theme -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-	<!-- link to local static files -->
-    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-	<!-- Font awesome fonts for vector graphics icons and text -->
-	<script scr="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"></script>
-</head>
-<body>
-	<div class="container">
-		<h2>Home of Flask!</h2>
-		<br>
-		<p>Click <a href="/welcome">here</a> to go find more about us. or <a href="/logout">log out</a></p>
-		{% for message in get_flashed_messages() %}
-			{{ message }}
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Welcome to Flask!</h1>
+	<br>
+	<p>Click <a href="/logout">here</a> to logout.</p>
+	<br><br>
+	<h3>Posts:</h3>
+		{% for post in posts %}
+			<strong>Title:</strong> {{ post.title }} <br>
+			<strong>Post:</strong> {{ post.description }} <br>
+			<br>
 		{% endfor %}
-	</div>
-</body>
-</html>
+
+{% endblock %}
