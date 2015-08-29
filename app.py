@@ -1,6 +1,7 @@
 # import the flask class from the Flask module
-from flask import Flask, render_template, redirect, url_for, request, session, flash, g
+from flask import Flask, render_template, redirect, url_for, request, session, flash
 from functools import wraps
+from flask.ext.sqlalchemy import SQLAlchemy 
 
 import sqlite3
 
@@ -9,7 +10,14 @@ app = Flask(__name__)
 
 # create a secret key for sessions and cookies
 app.secret_key = "hari-om-tat-sat"
-app.database = "sample.db"
+#app.database = "sample.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+
+# create the sqlalchemy object
+db = SQLAlchemy(app)
+
+# import db schema
+from models import *
 
 #login required decorator
 def login_required(f):
@@ -27,10 +35,11 @@ def login_required(f):
 @login_required
 def home():
 	# return "Hello, World!"  # return a string
-	g.db = connect_db()
-	cur = g.db.execute('select * from posts')
-	posts = [dict(title=row[0], description=row[1]) for row in cur.fetchall()]
-	g.db.close()
+	#g.db = connect_db()
+	#cur = g.db.execute('select * from posts')
+	#posts = [dict(title=row[0], description=row[1]) for row in cur.fetchall()]
+	#g.db.close()
+	posts = db.session.query(BlogPost).all()
 	return render_template('index.html', posts=posts)  # render a template
 
 @app.route('/welcome')
@@ -45,7 +54,7 @@ def login():
 			error = 'Invalid Credentials. Please try again.'
 		else:
 			session['logged_in'] = True
-			flash('You are logged in.')
+			flash('You were logged in.')
 			return redirect(url_for('home'))
 	return render_template('login.html', error=error)
 
@@ -53,12 +62,13 @@ def login():
 @login_required
 def logout():
 	session.pop('logged_in', None)
-	flash('You are logged out.')
+	flash('You were logged out.')
 	return redirect(url_for('welcome'))
 
 # connect to database
 def connect_db():
-	return sqlite3.connect(app.database)
+#	return sqlite3.connect(app.database)
+	return sqlite3.connect('posts.db')
 
 # start the server with the run() method
 if __name__ == '__main__':
